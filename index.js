@@ -40,15 +40,17 @@ async function getPokemonImg(allPokemon, count) {
 
   while (selected.length < count) {
     const randomIndex = Math.floor(Math.random() * allPokemon.length);
-    // const { name, url } = allPokemon[randomIndex];
+    const { name, url } = allPokemon[randomIndex];
 
-    if (!used.includes(randomIndex)) {
-      used.push(randomIndex);
-      const name = allPokemon[randomIndex].name;
-      const id = randomIndex + 1;
-      const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+    if (!used.includes(name)) {
+      const res = await fetch(url);
+      const data = await res.json();
+      const image = data.sprites?.other?.["official-artwork"]?.front_default;
 
-      selected.push({ name, image });
+      if (image) {
+        used.push(name);
+        selected.push({ name, image });
+      }
     }
   }
 
